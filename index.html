@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>みんなの時計</title>
+        <style>
+            .clock-root {
+                width: 250px;
+                height: 250px;
+                border: 25px solid;
+                border-radius: 50%;
+                position: relative;
+            }
+            .clock-hand {
+                position: absolute;
+                bottom: 50%;
+                left: 0;
+                right: 0;
+                margin: auto;
+                transform-origin: bottom;
+                transition: transform 1s linear;
+            }
+            .clock-hand--hour {
+                width: 8px;
+                height: 25%;
+                background: #000;
+                border-radius: 4px;
+            }
+            .clock-hand--minute {
+                width: 4px;
+                height: 45%;
+                background: #000;
+                border-radius: 2px;
+            }
+            .clock-hand--second {
+                width: 1px;
+                height: 45%;
+                background: #f00;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="clock-root">
+            <div class="clock-hand clock-hand--hour"></div>
+            <div class="clock-hand clock-hand--minute"></div>
+            <div class="clock-hand clock-hand--second"></div>
+        </div>
+        <button class="clock-switch">On/Off</button>
+        <script>
+            var hourHand = document.querySelector(".clock-hand--hour");
+            var minuteHand = document.querySelector(".clock-hand--minute");
+            var secondHand = document.querySelector(".clock-hand--second");
+            function update(time) {
+                var date = new Date();
+                if (typeof time !== "undefined") {
+                    date = time;
+                }
+                var seconds = (date.getHours() * 60 + date.getMinutes()) * 60 + date.getSeconds();
+                var passage = seconds / (24 * 60 * 60);
+                var hourHandRotation = passage * 360 * 2;
+                var minuteHandRotation = passage * 360 * 24;
+                var secondHandRotation =  passage * 360 * 24 * 60;
+                hourHand.style.transform = "rotate(" + hourHandRotation + "deg)";
+                minuteHand.style.transform = "rotate(" + minuteHandRotation + "deg)";
+                secondHand.style.transform = "rotate(" + secondHandRotation + "deg)";
+            }
+            var id = setInterval(update, 1000);
+            update();
+
+            var button = document.querySelector(".clock-switch");
+            var on = true;
+            button.addEventListener("click", function() {
+                if (on) {
+                    clearInterval(id);
+                    update(new Date(0, 0, 0));
+                    on = false;
+                } else {
+                    id = setInterval(update, 1000);
+                    on = true
+                }
+            });
+        </script>
+    </body>
+</html>
